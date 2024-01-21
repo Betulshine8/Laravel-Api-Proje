@@ -1,0 +1,58 @@
+#!/usr/bin/env php
+<?php
+
+define('LARAVEL_START', microtime(true));
+
+/*
+ Register The Auto Loader
+Composer, otomatik olarak oluşturulan kullanışlı bir sınıf yükleyicisi sağlar
+Uygulamamız için. Sadece onun kullanılması  gerek.
+ Sınıflarımızdan herhangi biri  manuel olarak yüklenir. 
+ Bu durumda, Composer kullanılarak yüklenen sınıfların yüklenmesi gerekir.
+
+
+
+*/
+
+require __DIR__.'/vendor/autoload.php';
+
+$app = require_once __DIR__.'/bootstrap/app.php';
+
+/*
+ Run The Artisan Application
+
+ Konsol uygulamasını çalıştırdığımızda, geçerli CLI komutu şu şekilde olacaktır
+ bu konsolda yürütülür ve yanıt bir terminale geri gönderilir
+ veya geliştiriciler için başka bir çıktı cihazı. 
+ 
+ Örneğin, konsol uygulaması çalıştırıldığında,
+ artisan yürütülür ve yanıtı terminale geri gönderilir.
+
+ 
+
+
+
+*/
+
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+
+$status = $kernel->handle(
+    $input = new Symfony\Component\Console\Input\ArgvInput,
+    new Symfony\Component\Console\Output\ConsoleOutput
+);
+
+/*
+ Shutdown The Application
+ Artisan çalışmayı bitirdiğinde, kapatma olaylarını başlatacağız
+ Böylece biz kapatmadan önce uygulama tarafından herhangi bir son çalışma yapılabilir.
+ Süreci kapatın. Bu, talebin başına gelecek en son şeydir.
+ 
+
+ Konsol uygulamasının çalışmasının sonlandırılması gerekir.
+
+
+*/
+
+$kernel->terminate($input, $status);
+
+exit($status);
